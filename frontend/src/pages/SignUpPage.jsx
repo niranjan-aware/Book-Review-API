@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -25,12 +27,14 @@ export default function SignUpPage() {
     if (success === true) {
       //signup action
       console.log(formData);
+      navigate("/login");
+
     }
   };
 
   return (
     <div className="home-container min-h-screen bg-red-200 flex items-center justify-center">
-      <div className="signup-box h-[500px] w-[500px] bg-violet-100 rounded-2xl shadow-2xl flex items-center justify-center">
+      <div className="signup-box h-[500px] w-[500px] bg-violet-100 rounded-2xl shadow-lg shadow-violet-300 flex flex-col space-y-10 items-center justify-center">
         <form onSubmit={handleSubmit} className="signup-form w-[400px]">
           <div className="title">
             <h1 className="text-2xl font-semibold text-slate-800 my-2">
@@ -108,8 +112,12 @@ export default function SignUpPage() {
             >
               Sign in
             </button>
+            
           </div>
         </form>
+        <div className="go-to-login text-sm text-slate-950">
+          <button onClick={()=>navigate("/login")}>already have account? Login</button>
+        </div>
       </div>
     </div>
   );

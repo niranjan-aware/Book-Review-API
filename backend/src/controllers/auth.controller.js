@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../lib/utils.js";
 
 export const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -28,14 +29,15 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
-      await newUser.save();
-      
-      res.status(200).json({
-        _id: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        createdAt: newUser.createdAt,
-      });
+        generateToken(newUser._id, res);
+        await newUser.save();
+        
+        res.status(200).json({
+            _id: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+            createdAt: newUser.createdAt,
+        });
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
@@ -58,7 +60,7 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
+    generateToken(user._id, res);
     res.status(200).json({
       _id: user._id,
       username: user.username,
@@ -73,6 +75,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
+    res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);

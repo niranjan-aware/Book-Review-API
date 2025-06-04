@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function LoginPage() {
   return (
-    <div>LoginPage</div>
+    <div className="home-container min-h-screen bg-yellow-200"></div>
   )
 }

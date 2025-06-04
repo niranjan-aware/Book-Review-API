@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ export default function SignUpPage() {
     email: "",
     password: "",
   });
+
+  const { signup } = useAuthStore();
 
   const validateForm = () => {
     if (!formData.email.trim()) return toast.error("Email is required");
@@ -25,10 +28,8 @@ export default function SignUpPage() {
     e.preventDefault();
     const success = validateForm();
     if (success === true) {
-      //signup action
-      console.log(formData);
+      signup(formData);
       navigate("/login");
-
     }
   };
 

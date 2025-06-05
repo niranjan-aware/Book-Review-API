@@ -1,7 +1,15 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
+import { useBookStore } from '../store/useBookStore';
+import AddBookModal from '../components/AddBookModal';
 
 export default function HomePage() {
-  const books=[];
+  const {loading, books, fetchBooks,} = useBookStore();
+  const [showAddBook, setShowAddBook] = useState(false);
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
   return (
     <div className="home-container min-h-screen bg-sky-200 p-6">
       <div className="max-w-7xl mx-auto">
@@ -20,13 +28,7 @@ export default function HomePage() {
             </form>
             <div className="flex gap-2">
               <button
-                onClick=""
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                Filters
-              </button>
-              <button
-                onClick=""
+                onClick={() => setShowAddBook(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Add Book
@@ -82,6 +84,11 @@ export default function HomePage() {
         )}
           
       </div>
+      {showAddBook && (
+        <AddBookModal
+          onClose={() => setShowAddBook(false)}
+        />
+      )}
     </div>
   )
 }

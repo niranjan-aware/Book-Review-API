@@ -7,7 +7,7 @@ import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
 export default function App() {
   return (
-    <div className="main-container bg-black">
+    <div className="main-container bg-slate-400">
       <Navbar/>
       <Routes>
         <Route path='/' element={<HomePage/>}/>

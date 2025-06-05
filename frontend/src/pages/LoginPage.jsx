@@ -15,7 +15,6 @@ export default function LoginPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
       login(formData);
-      console.log(formData);
   };
 
   return (

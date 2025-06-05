@@ -20,10 +20,10 @@ export default function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'var(--fallback-b1,oklch(var(--b1)))',
             color: 'var(--fallback-bc,oklch(var(--bc)))',
           },
         }}
+        className="bg-sky-200"
       />
     </div>
   )

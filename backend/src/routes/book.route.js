@@ -5,7 +5,8 @@ import {
   searchBooks,
   addReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  getBookById
 } from "../controllers/bookCRUD.controller.js";
 
 import {protectRoute} from '../middleware/auth.middleware.js'
@@ -18,5 +19,6 @@ router.get("/search", protectRoute, searchBooks);
 router.post("/books/:id/reviews", protectRoute, addReview);
 router.put("/reviews/:id", protectRoute, updateReview);
 router.delete("/reviews/:id", protectRoute, deleteReview);
+router.get("/books/:id", protectRoute, getBookById);
 
 export default router;

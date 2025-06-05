@@ -1,5 +1,6 @@
 import Book from "../models/book.model.js";
-import Review from "../models/review.model.js"
+import Review from "../models/review.model.js";
+import mongoose from "mongoose";
 
 export const addBook = async (req, res) => {
   try {
@@ -11,7 +12,9 @@ export const addBook = async (req, res) => {
 
     const existingBook = await Book.findOne({ title });
     if (existingBook) {
-      return res.status(400).json({ message: "Book with this title already exists" });
+      return res
+        .status(400)
+        .json({ message: "Book with this title already exists" });
     }
 
     const newBook = new Book({
@@ -33,7 +36,7 @@ export const getAllBooks = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    
+
     const filter = {};
     if (req.query.author) {
       filter.author = new RegExp(req.query.author, "i");
@@ -77,10 +80,7 @@ export const searchBooks = async (req, res) => {
     }
 
     const searchFilter = {
-      $or: [
-        { title: new RegExp(q, "i") },
-        { author: new RegExp(q, "i") },
-      ],
+      $or: [{ title: new RegExp(q, "i") }, { author: new RegExp(q, "i") }],
     };
 
     const books = await Book.find(searchFilter)
@@ -114,21 +114,27 @@ export const addReview = async (req, res) => {
     const userId = req.user.id;
 
     if (!rating || !comment) {
-      return res.status(400).json({ message: "Rating and comment are required" });
+      return res
+        .status(400)
+        .json({ message: "Rating and comment are required" });
     }
 
     if (rating < 1 || rating > 5) {
-      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
     }
-
     const book = await Book.findById(id);
+
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
     }
 
     const existingReview = await Review.findOne({ book: id, user: userId });
     if (existingReview) {
-      return res.status(400).json({ message: "You have already reviewed this book" });
+      return res
+        .status(400)
+        .json({ message: "You have already reviewed this book" });
     }
 
     const newReview = new Review({
@@ -141,9 +147,16 @@ export const addReview = async (req, res) => {
     await newReview.save();
     await newReview.populate("user", "username email");
 
-    res.status(201).json({ message: "Review added successfully", review: newReview });
+    res.status(201).json({
+      message: "Review added successfully",
+      review: newReview,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error in addReview:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
 
@@ -152,29 +165,34 @@ export const updateReview = async (req, res) => {
     const { id } = req.params;
     const { rating, comment } = req.body;
     const userId = req.user.id;
-
     if (!rating || !comment) {
-      return res.status(400).json({ message: "Rating and comment are required" });
+      return res
+        .status(400)
+        .json({ message: "Rating and comment are required" });
     }
 
     if (rating < 1 || rating > 5) {
-      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
     }
 
     const review = await Review.findById(id);
+
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
 
     if (review.user.toString() !== userId) {
-      return res.status(403).json({ message: "You can only update your own reviews" });
+      return res
+        .status(403)
+        .json({ message: "You can only update your own reviews" });
     }
 
     review.rating = rating;
     review.comment = comment;
     await review.save();
     await review.populate("user", "username email");
-
     res.status(200).json({ message: "Review updated successfully", review });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -192,12 +210,71 @@ export const deleteReview = async (req, res) => {
     }
 
     if (review.user.toString() !== userId) {
-      return res.status(403).json({ message: "You can only delete your own reviews" });
+      return res
+        .status(403)
+        .json({ message: "You can only delete your own reviews" });
     }
 
     await Review.findByIdAndDelete(id);
     res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    const book = await Book.findById(id);
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    const reviews = await Review.find({ book: id })
+      .populate("user", "username email")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalReviews = await Review.countDocuments({ book: id });
+
+    let averageRating = 0;
+    if (totalReviews > 0) {
+      const ratingStats = await Review.aggregate([
+        { $match: { book: new mongoose.Types.ObjectId(id) } },
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: "$rating" },
+          },
+        },
+      ]);
+
+      averageRating = ratingStats.length > 0 ? ratingStats[0].averageRating : 0;
+    }
+
+    const totalPages = Math.ceil(totalReviews / limit);
+
+    return res.status(200).json({
+      book,
+      averageRating: Math.round(averageRating * 10) / 10,
+      totalReviews,
+      reviews,
+      reviewsPagination: {
+        currentPage: page,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    });
+  } catch (error) {
+    console.error("getBookById error:", error);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };

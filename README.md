@@ -1,16 +1,17 @@
-#  Niranjan Aware [![Portfolio]](https://niranjan-s-studio.netlify.app/)
+#  Niranjan Aware [Portfolio](https://niranjan-s-studio.netlify.app/)
 #  Book Review API - Full Stack Application (frontend developed for better testing) 
 #  Checkout the Live Demo for testing assignment
 
 
-[![Assignment Live Demo]](https://book-review-api-viyp.onrender.com/)
-[![API Collection]](https://www.postman.com/descent-module-astronomer-20357494/workspace/billeasy/collection/21191772-97b71a9e-9dff-46fa-bcf6-d5d37f57ed29?action=share&creator=21191772)
+[Assignment Live Demo( --> wait for a minute/refresh in case you see loading render.com (due to free version))](https://book-review-api-viyp.onrender.com/)
 
-## 🎯 Project Overview
+[API Collection](https://www.postman.com/descent-module-astronomer-20357494/workspace/billeasy/collection/21191772-97b71a9e-9dff-46fa-bcf6-d5d37f57ed29?action=share&creator=21191772)
+
+##  Project Overview
 
 This is a full-stack Book Review API application that demonstrates modern web development practices, authentication patterns, and clean architecture. The project includes both a robust backend API and an interactive frontend interface.
 
-### 🌟 Key Features
+###  Key Features
 
 - **JWT Authentication** - Secure user registration and login system
 - **Book Management** - Add, view, and search books with advanced filtering
@@ -20,13 +21,13 @@ This is a full-stack Book Review API application that demonstrates modern web de
 - **RESTful API** - Well-structured endpoints following REST conventions
 - **Data Validation** - Comprehensive input validation and error handling
 
-## 🚀 Live Application
+##  Live Application
 
 - **Frontend Application**: [https://book-review-api-viyp.onrender.com/](https://book-review-api-viyp.onrender.com/)
 - **Backend API**: Hosted on Render (auto-deployed from GitHub)
 - **API Documentation**: [Postman Collection](https://www.postman.com/descent-module-astronomer-20357494/workspace/billeasy/collection/21191772-97b71a9e-9dff-46fa-bcf6-d5d37f57ed29?action=share&creator=21191772)
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Node.js** - Runtime environment
@@ -47,7 +48,7 @@ This is a full-stack Book Review API application that demonstrates modern web de
 - **Render** - Backend hosting && Frontend hosting
 - **GitHub** - Version control and CI/CD
 
-## 📋 API Endpoints
+##  API Endpoints
 
 ### Authentication
 ```http
@@ -72,7 +73,7 @@ PUT  /api/reviews/:id        # Update own review
 DELETE /api/reviews/:id      # Delete own review
 ```
 
-## 🏗️ Database Schema
+##  Database Schema
 
 ### User Model
 ```javascript
@@ -110,7 +111,7 @@ DELETE /api/reviews/:id      # Delete own review
 }
 ```
 
-## 🔧 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - Node.js (v16 or higher)
@@ -153,7 +154,7 @@ echo "VITE_API_URL=http://localhost:5000" > .env
 ### 4. Database Setup
 Ensure MongoDB is running on your system or update the `MONGODB_URI` in your `.env` file to point to your MongoDB Atlas cluster.
 
-## 🚀 Running the Application
+##  Running the Application
 
 ### Development Mode
 
@@ -248,7 +249,7 @@ Book-Review-API/
 └── README.md
 ```
 
-## 🎯 Design Decisions
+##  Design Decisions
 
 - **MERN Stack**: Chosen for its modern, scalable architecture
 - **JWT Authentication**: Stateless authentication for better scalability
@@ -256,7 +257,7 @@ Book-Review-API/
 - **Tailwind CSS**: Utility-first approach for rapid UI development
 - **Vite**: Modern build tool for faster development experience
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 - [ ] User profiles with reading history
 - [ ] Book recommendation system
@@ -264,7 +265,7 @@ Book-Review-API/
 - [ ] Image upload for book covers
 - [ ] Email notifications for new reviews
 
-## 👨‍💻 Developer
+##  Developer
 
 **Niranjan Aware**
 - Portfolio: [https://niranjan-s-studio.netlify.app/](https://niranjan-s-studio.netlify.app/)

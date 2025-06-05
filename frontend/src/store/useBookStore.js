@@ -6,6 +6,9 @@ export const useBookStore = create((set, get) => ({
   books: [],
   loading: false,
 
+
+  setSearchQuery: (query) => set({ searchQuery: query }),
+
   addBook: async (bookData) => {
     set({ loading: true });
     try {
@@ -30,12 +33,8 @@ export const useBookStore = create((set, get) => ({
 
       const response = await axiosInstance.get(`/books?${params}`);
 
-      set({
-        books: response.data.books,
-        loading: false,
-      });
+      set({books: response.data.books});
 
-      return data;
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed book fetching!");
     } finally {
@@ -45,5 +44,24 @@ export const useBookStore = create((set, get) => ({
 
   fetchBookById: async () => {},
 
-  searchBooks: async () => {},
+  searchBooks: async (query, page = 1, limit = 10) => {
+    if (!query.trim()) {
+      return get().fetchBooks(page, limit);
+    }
+    
+    set({ loading: true,});
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        page: page.toString(),
+        limit: limit.toString()
+      });
+      const response = await axiosInstance.get(`search?${params}`);
+      set({books: response.data.books });
+    } catch (error) {
+      console.log("Search failed in useBook Store");
+    }finally{
+      set({loading: false });
+    }
+  },
 }));

@@ -3,25 +3,38 @@ import { useBookStore } from '../store/useBookStore';
 import AddBookModal from '../components/AddBookModal';
 
 export default function HomePage() {
-  const {loading, books, fetchBooks,} = useBookStore();
+  const {loading, books, fetchBooks, searchBooks, setSearchQuery} = useBookStore();
   const [showAddBook, setShowAddBook] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     fetchBooks();
   }, []);
+
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      searchBooks(searchInput);
+      setSearchQuery(searchInput);
+    } else {
+      fetchBooks(1, 10, filters);
+      setSearchQuery('');
+    }
+  };
 
   return (
     <div className="home-container min-h-screen bg-sky-200 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <form onSubmit="" className="flex-1 max-w-md">
+            <form onSubmit={handleSearch} className="flex-1 max-w-md">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search books by title or author..."
-                  value=""
-                  onChange=""
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>

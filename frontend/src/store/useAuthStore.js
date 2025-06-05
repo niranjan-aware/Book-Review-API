@@ -6,6 +6,7 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
+  isCheckingAuth: true,
 
   checkAuth: async () => {
     try {
@@ -17,6 +18,8 @@ export const useAuthStore = create((set, get) => ({
       if (error.response?.status === 401) {
         set({ authUser: null });
       }
+    }finally{
+      set({ isCheckingAuth: false });
     }
   },
 

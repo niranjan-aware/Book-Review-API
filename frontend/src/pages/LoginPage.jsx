@@ -18,8 +18,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="home-container min-h-screen bg-red-200 flex items-center justify-center">
-      <div className="signup-box h-[500px] w-[500px] bg-violet-100 rounded-2xl shadow-lg shadow-violet-300 flex flex-col space-y-10 items-center justify-center">
+    <div className="home-container min-h-screen flex items-center justify-center">
+      <div className="signup-box h-[500px] w-[500px] bg-violet-50 rounded-2xl shadow-2xl shadow-violet-300 flex flex-col space-y-10 items-center justify-center">
         <form onSubmit={handleSubmit} className="signup-form w-[400px]">
           <div className="title">
             <h1 className="text-2xl font-semibold text-slate-800 my-2">

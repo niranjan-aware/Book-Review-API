@@ -93,13 +93,13 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-violet-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Book Review System
           </h1>
-          <p className="text-gray-600">Some Assesment Fetures are implemented for testing purpose</p>
+          <p className="text-gray-600">Some Assesment Features are implemented for testing purpose(add book, search book, get book, get book by ID, add review, update review, delete review,<br /> Pagination done at Backend pedning frontend integration)</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -210,7 +210,7 @@ const Home = () => {
                 {books.map((book) => (
                   <div
                     key={book._id}
-                    className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                    className="bg-white rounded-lg shadow-md hover:shadow-lg  cursor-pointer hover:scale-105 transition-all duration-300"
                     onClick={() => openBookDetails(book._id)}
                   >
                     <div className="p-6">

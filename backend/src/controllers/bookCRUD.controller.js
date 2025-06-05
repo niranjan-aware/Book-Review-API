@@ -1,4 +1,5 @@
 import Book from "../models/book.model.js";
+import Review from "../models/review.model.js"
 
 export const addBook = async (req, res) => {
   try {
@@ -101,6 +102,101 @@ export const searchBooks = async (req, res) => {
         hasPrev: page > 1,
       },
     });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.id;
+
+    if (!rating || !comment) {
+      return res.status(400).json({ message: "Rating and comment are required" });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const book = await Book.findById(id);
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    const existingReview = await Review.findOne({ book: id, user: userId });
+    if (existingReview) {
+      return res.status(400).json({ message: "You have already reviewed this book" });
+    }
+
+    const newReview = new Review({
+      book: id,
+      user: userId,
+      rating,
+      comment,
+    });
+
+    await newReview.save();
+    await newReview.populate("user", "username email");
+
+    res.status(201).json({ message: "Review added successfully", review: newReview });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const updateReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.id;
+
+    if (!rating || !comment) {
+      return res.status(400).json({ message: "Rating and comment are required" });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const review = await Review.findById(id);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "You can only update your own reviews" });
+    }
+
+    review.rating = rating;
+    review.comment = comment;
+    await review.save();
+    await review.populate("user", "username email");
+
+    res.status(200).json({ message: "Review updated successfully", review });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const deleteReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const review = await Review.findById(id);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "You can only delete your own reviews" });
+    }
+
+    await Review.findByIdAndDelete(id);
+    res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
